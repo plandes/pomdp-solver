@@ -414,16 +414,16 @@ PomdpSolveParams parseCmdLineParams( int argc,
      if (( param->report_file 
           = fopen( param->report_filename , "w")) == NULL) {
        param->report_file = stdout;
-       fprintf( gStdErrFile, 
+       fprintf( stderr, 
                 "** Error: Cannot write to output file %s.\n",
                 param->report_filename );
-       fprintf( gStdErrFile, 
+       fprintf( stderr, 
                 "\tUsing stdout instead.\n" );
      }  /* if can't open report file */
 
      /* If they desire to put all the output into a specific file,
         then we will also output all stderr messages here as well. */
-     gStdErrFile = param->report_file;
+     stderr = param->report_file;
 
    }  /* If report file specified */
    

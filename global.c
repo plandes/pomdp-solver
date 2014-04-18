@@ -40,7 +40,7 @@ char *boolean_str[] = BOOLEAN_STRINGS;
 /* Strings for the various stopping criteria */
 char *verbose_mode_str[] = VERBOSE_MODE_STRINGS;
 
-const FILE *gStdErrFile = &stderr;
+//const FILE *gStdErrFile = &stderr;
 
 /* The name of the executable of this program. */
 char gExecutableName[80];

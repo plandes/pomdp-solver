@@ -86,34 +86,34 @@
    thing.  */
 #ifndef NON_GNU
 #define Assert(EXPR,MSG) if(!(EXPR)) { \
-  fprintf(gStdErrFile, "\n** ABORT ** File: %s function: %s, Line: %d\n\t", \
+  fprintf(stderr, "\n** ABORT ** File: %s function: %s, Line: %d\n\t", \
           __FILE__, __PRETTY_FUNCTION__, __LINE__ ); \
-  fprintf(gStdErrFile, MSG ); \
-  fprintf(gStdErrFile, "\n" ); \
+  fprintf(stderr, MSG ); \
+  fprintf(stderr, "\n" ); \
   exit( -1 ); }
 #else
 #define Assert(EXPR,MSG) if(!(EXPR)) { \
-  fprintf(gStdErrFile, "\n** ABORT ** File: %s function: %s, Line: %d\n\t", \
+  fprintf(stderr, "\n** ABORT ** File: %s function: %s, Line: %d\n\t", \
           __FILE__, "<Unknown>", __LINE__ ); \
-  fprintf(gStdErrFile, MSG ); \
-  fprintf(gStdErrFile, "\n" ); \
+  fprintf(stderr, MSG ); \
+  fprintf(stderr, "\n" ); \
   exit( -1 ); }
 #endif
 
 /* This is like ASSERT, except there is no expression and it aborts
    with a message. */
 #define Abort(MSG) { \
-  fprintf(gStdErrFile, "\n** PROGRAM ABORTED **\n\t" ); \
-  fprintf(gStdErrFile, MSG ); \
-  fprintf(gStdErrFile, "\n" ); \
+  fprintf(stderr, "\n** PROGRAM ABORTED **\n\t" ); \
+  fprintf(stderr, MSG ); \
+  fprintf(stderr, "\n" ); \
   exit( -1 ); }
 
 /* This is like ASSERT, except there is no expression and it aborts
    with a message. */
 #define Warning(MSG) { \
-  fprintf(gStdErrFile, "\n** Warning **\n\t" ); \
-  fprintf(gStdErrFile, MSG ); \
-  fprintf(gStdErrFile, "\n" ); }
+  fprintf(stderr, "\n** Warning **\n\t" ); \
+  fprintf(stderr, MSG ); \
+  fprintf(stderr, "\n" ); }
 
 #define FREE(X)   free( X )
 
@@ -237,7 +237,7 @@ extern char *verbose_mode_str[];
 
 extern int gVerbose[];
 extern char gExecutableName[];
-extern const FILE *gStdErrFile;
+//extern const FILE *gStdErrFile;
 
 extern double *gTempValue;
 extern double *gTempBelief;

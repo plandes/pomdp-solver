@@ -96,7 +96,7 @@ void writePolicyGraph( AlphaList list, char *filename ) {
    FILE *file;
 
    if ((file = fopen(filename , "w")) == NULL) {
-     fprintf( gStdErrFile, 
+     fprintf( stderr, 
              "** Error: The policy graph file: %s cannot be opened.\n",
              filename);
       return;

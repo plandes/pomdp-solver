@@ -998,7 +998,7 @@ AlphaList readAlphaList( char *filename, int max_alphas ) {
    AlphaList list = NULL;
    
    if ((file = fopen(filename , "r")) == NULL) {
-     fprintf( gStdErrFile, 
+     fprintf( stderr, 
               "** Error: The alpha vector file: %s does not exist.\n",
              filename);
      return ( NULL );
@@ -1021,7 +1021,7 @@ AlphaList readAlphaList( char *filename, int max_alphas ) {
      
      for ( i = 0; i < gNumStates; i++ )
        if ( fscanf( file, "%lf", &( alpha[i] )) == EOF ) {
-         fprintf(gStdErrFile, 
+         fprintf(stderr, 
                  "** Error: Alpha vector file format incorrect.\n");
          return ( NULL );
        }
@@ -1044,7 +1044,7 @@ void writeAlphaList( AlphaList list, char *filename ) {
    int i;
    
    if ((file = fopen(filename , "w")) == NULL) {
-     fprintf(gStdErrFile, 
+     fprintf(stderr, 
              "** Error: The alpha vector file: %s cannot be opened.\n",
              filename);
      return;

@@ -513,7 +513,7 @@ Record_List cleanRecordList( Record_List list, double y ) {
       list = list->next;
 
       if( temp->used == 0 )
-         fprintf( gStdErrFile,
+         fprintf( stderr,
                   "WARNING! Removing an unused record from list.\n");
 
       destroyRecordNode( temp );
@@ -533,7 +533,7 @@ void destroyRecordList( Record_List list ) {
        list = list->next;
 
       if( temp->used == 0 )
-         fprintf( gStdErrFile,
+         fprintf( stderr,
                   "WARNING! Removing an unused record from list.\n");
 
       destroyRecordNode( temp );
@@ -674,10 +674,10 @@ int checkLPStatus( LP lp ) {
    result = LP_getSolution( lp );
 
    if( result )
-      fprintf( gStdErrFile, "** WARN ** No LP solution exists\n");
+      fprintf( stderr, "** WARN ** No LP solution exists\n");
 
    if( gVerbose[V_VERTEX_ENUM] && ( status == CPX_ABORT_INFEAS ))
-      fprintf( gStdErrFile,
+      fprintf( stderr,
                "** WARN ** LP status is infeasible.\n" );
    
    return( status );
@@ -729,7 +729,7 @@ int getTableauxColumn( LP lp, int col, double *coefs ) {
 */   
    
    if( LP_getgrad( lp, col, dummy_int, coefs )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getgrad().\n");
+      fprintf( stderr, "CPLEX calling problem: getgrad().\n");
       exit( -1 );
    }
 
@@ -749,19 +749,19 @@ int getTableauxRHS( LP lp, double *coefs ) {
 
    /* Get solution values for original (and added) variables */
    if( LP_getx( lp, x_vals, 0, gNumVariables )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getx().\n");
+      fprintf( stderr, "CPLEX calling problem: getx().\n");
       exit( -1 );
    }
 
    /* Get solution values for slack variables */
    if( LP_getslack( lp, slack_vals, 0, gNumConstraints - 1 )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getslack().\n");
+      fprintf( stderr, "CPLEX calling problem: getslack().\n");
       exit( -1 );
    }
 
    /* Get the list of basic variables for each row. */
    if( LP_getgrad( lp, 0, tableaux_bv, dummy_double )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getgrad().\n");
+      fprintf( stderr, "CPLEX calling problem: getgrad().\n");
       exit( -1 );
    }
 
@@ -819,13 +819,13 @@ int findPivotRow( LP lp, int col, int *rows_to_pivot ) {
       */
    if( col < lp->cols ) {
       if( LP_getdj( lp, &obj_coef, col, col )) {
-         fprintf( gStdErrFile, "CPLEX calling problem: getdj().\n");
+         fprintf( stderr, "CPLEX calling problem: getdj().\n");
          exit( -1 );
       }
    }
    else {  /* it is a slack column */
       if( LP_getpi( lp, &obj_coef, col - lp->cols, col - lp->cols )) {
-         fprintf( gStdErrFile, "CPLEX calling problem: getpi().\n");
+         fprintf( stderr, "CPLEX calling problem: getpi().\n");
          exit( -1 );
       }
    }
@@ -905,7 +905,7 @@ int findBasicVariable( LP lp, int row, int* type, int *index ) {
 */
 
    if( LP_getgrad( lp, 0, tableaux_bv, dummy_double )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getgrad().\n");
+      fprintf( stderr, "CPLEX calling problem: getgrad().\n");
       exit( -1 );
    }
 
@@ -1001,14 +1001,14 @@ int verifyBasis( LP lp, int *row_basis ) {
       return( count );
 
    if( count < num_slacks ) {
-      fprintf( gStdErrFile, "** ERR ** Not enough slacks in basis!\n");
-      fprintf( gStdErrFile, "          This shouldn't happen. Aborting.\n");
+      fprintf( stderr, "** ERR ** Not enough slacks in basis!\n");
+      fprintf( stderr, "          This shouldn't happen. Aborting.\n");
       exit( -1 );
    }
 
    /* Get solution values for slack variables (i.e., their RHS) */
    if( LP_getslack( lp, slack_vals, 0, gNumConstraints - 1 )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getslack().\n");
+      fprintf( stderr, "CPLEX calling problem: getslack().\n");
       exit( -1 );
    }
 
@@ -1032,8 +1032,8 @@ int verifyBasis( LP lp, int *row_basis ) {
       }
 
    if( count > 0 ) {
-      fprintf( gStdErrFile, "** ERR ** Too many non-zero slacks in basis!\n");
-      fprintf( gStdErrFile, "          This shouldn't happen. Aborting.\n");
+      fprintf( stderr, "** ERR ** Too many non-zero slacks in basis!\n");
+      fprintf( stderr, "          This shouldn't happen. Aborting.\n");
       exit( -1 );
    }
 
@@ -1057,13 +1057,13 @@ int updateRecordList( LP lp ) {
     solution vector */
 
    if( LP_getx( lp, &y, gNumVariables, gNumVariables )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getx().\n");
+      fprintf( stderr, "CPLEX calling problem: getx().\n");
       exit( -1 );
    }
   
    /* Get the basis status of slacks */
    if( LP_getbase( lp, NULL, row_basis )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getbase.\n");
+      fprintf( stderr, "CPLEX calling problem: getbase.\n");
       exit( -1 );
    }
 
@@ -1082,17 +1082,17 @@ int updateRecordList( LP lp ) {
    basisToBits( bit_basis, row_basis );
 
    if( gVerbose[V_VERTEX_ENUM] ) {
-      fprintf( gStdErrFile, "Adding record: y = %.2lf, ( ", y);
+      fprintf( stderr, "Adding record: y = %.2lf, ( ", y);
       for( i = 0; i < gNumConstraints; i++ )
          if( row_basis[i] == BASIC )
-            fprintf( gStdErrFile, "%d ", i );
-      fprintf( gStdErrFile, ")\n");
+            fprintf( stderr, "%d ", i );
+      fprintf( stderr, ")\n");
    }
 
    gRecordList = addRecordUnique( gRecordList, y, bit_basis, &result );
 
    if( gVerbose[V_VERTEX_ENUM] && !result )
-      fprintf( gStdErrFile, "Duplicate record, not adding to list.\n");
+      fprintf( stderr, "Duplicate record, not adding to list.\n");
 
 } /* updateRecordList */
 /**********************************************************************/
@@ -1138,7 +1138,7 @@ int doUSPivot( LP lp, int entering_var, int leaving_var ) {
    gCurSlackBasis[leaving_var] = BASIC;
   
    if( setTableaux( lp, gCurSlackBasis, Y_IN_BASIS ) == CPX_ABORT_INFEAS )
-      fprintf( gStdErrFile, 
+      fprintf( stderr, 
                "** ERR ** Restored tableaux not feasible. (US)\n");
    
    return( 1 );
@@ -1165,13 +1165,13 @@ int doUYPivot( LP lp, int entering_var, double *vertex ) {
       */
    if( setTableaux( lp, gCurSlackBasis, NOT_Y_IN_BASIS )
        == CPX_ABORT_INFEAS ) {
-      fprintf( gStdErrFile, 
+      fprintf( stderr, 
                "** WARN ** Cannot set tableaux for UY pivot.\n");
       gCurSlackBasis[entering_var] = NON_BASIC;
   
       if( setTableaux( lp, gCurSlackBasis, Y_IN_BASIS )
           == CPX_ABORT_INFEAS )
-         fprintf( gStdErrFile, 
+         fprintf( stderr, 
                   "** ERR ** Restored tableaux not feasible. (US)\n");
 
       return( 0 );
@@ -1180,7 +1180,7 @@ int doUYPivot( LP lp, int entering_var, double *vertex ) {
    /* Get the 'vertex' values, which are all but the last
     column variables in the LP formulation */
    if( LP_getx( lp, vertex, 0, gNumVariables-1 )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getx().\n");
+      fprintf( stderr, "CPLEX calling problem: getx().\n");
       exit( -1 );
    }
    
@@ -1189,7 +1189,7 @@ int doUYPivot( LP lp, int entering_var, double *vertex ) {
       */
    gCurSlackBasis[entering_var] = NON_BASIC;
    if( setTableaux( lp, gCurSlackBasis, Y_IN_BASIS ) == CPX_ABORT_INFEAS )
-      fprintf( gStdErrFile, 
+      fprintf( stderr, 
                "** ERR ** Restored tableaux not feasible. (UY)\n");
 
    return( 1 );
@@ -1260,7 +1260,7 @@ int doPivotCheck( LP lp, int col, double *b ) {
                          &leaving_var_type, &leaving_var_index );
 
       if( gVerbose[V_VERTEX_ENUM] ) 
-         fprintf( gStdErrFile,
+         fprintf( stderr,
                   "Entering variable col: %d, leaving variable row: %d\n",
                   col, row );
 
@@ -1317,7 +1317,7 @@ int doPivotCheck( LP lp, int col, double *b ) {
          return( 0 );
          
       default:
-         fprintf( gStdErrFile, 
+         fprintf( stderr, 
                  "**ERR** doPivotcheck: Unreckognized leaving var type.\n");
          exit( -1 );
          
@@ -1375,7 +1375,7 @@ int getNextRecord( LP lp ) {
       if( setTableaux( lp, gCurSlackBasis, Y_IN_BASIS )
           == CPX_ABORT_INFEAS ) {
          if( gVerbose[V_VERTEX_ENUM] )
-            fprintf( gStdErrFile,
+            fprintf( stderr,
                      "**WARN** Infeasible tableaux, moving to next record.\n");
 
          continue;
@@ -1404,7 +1404,7 @@ int specialVertexCheck( LP lp, double *vertex ) {
          all but the last column variables in the LP formulation 
          */
       if( LP_getx( lp, vertex, 0, gNumVariables-1 )) {
-         fprintf( gStdErrFile, "CPLEX calling problem: getx().\n");
+         fprintf( stderr, "CPLEX calling problem: getx().\n");
          exit( -1 );
       }
 
@@ -1479,7 +1479,7 @@ int getVertex( double *b ) {
           */
 
          if( gVerbose[V_VERTEX_ENUM] ) {
-            fprintf( gStdErrFile,
+            fprintf( stderr,
                      "Getting new tableaux to search:\n");
             showTableaux( lp->lp );
          }
@@ -1691,7 +1691,7 @@ int startVertexEnum( AlphaList item, AlphaList list ) {
    LP_loadLP( lp );
  
    if ( lp->lp == NULL )  {
-      fprintf( gStdErrFile, 
+      fprintf( stderr, 
                "** ERR ** startVertexEnum: loadlp() problem.\n");
       exit( -1 );
    }
@@ -1710,7 +1710,7 @@ int startVertexEnum( AlphaList item, AlphaList list ) {
    if( status == CPX_OPTIMAL ) {
 
       if( gVerbose[V_VERTEX_ENUM] ) {
-         fprintf( gStdErrFile, "Initial optimal tableaux:\n");
+         fprintf( stderr, "Initial optimal tableaux:\n");
          showTableaux( lp->lp );
       }
 
@@ -1771,10 +1771,10 @@ int showVertex( double *b ) {
    int i;
 
    for( i = 0; i < gNumVariables; i++ )
-      fprintf( gStdErrFile, "%.*lf ", 
+      fprintf( stderr, "%.*lf ", 
                VERTEX_ENUM_DISPLAY_PRECISION, b[i] );
 
-   fprintf( gStdErrFile, "\n" );
+   fprintf( stderr, "\n" );
 
    return( 1 );
 }  /* showVertex */
@@ -1784,54 +1784,54 @@ void showObjectiveRow( LP lp ) {
    double obj;
 
    if( LP_getdj( lp, tableaux_col, 0, lp->cols-1 )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getdj().\n");
+      fprintf( stderr, "CPLEX calling problem: getdj().\n");
       exit( -1 );
    }
 
-   fprintf( gStdErrFile, " obj|   1.00");
+   fprintf( stderr, " obj|   1.00");
    for( i = 0; i < lp->cols; i++ )
-      fprintf( gStdErrFile, "    %.2lf", -1.0*tableaux_col[i] );
+      fprintf( stderr, "    %.2lf", -1.0*tableaux_col[i] );
 
    if( LP_getpi( lp, tableaux_row, 0, lp->rows-1 )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getpi().\n");
+      fprintf( stderr, "CPLEX calling problem: getpi().\n");
       exit( -1 );
    }
 
    for( i = 0; i < lp->rows; i++ )
-      fprintf( gStdErrFile, "   %.2l f", tableaux_row[i] );
+      fprintf( stderr, "   %.2l f", tableaux_row[i] );
 
    if( LP_getobjval( lp, &obj )) {
-      fprintf( gStdErrFile, "CPLEX calling problem: getobjval().\n");
+      fprintf( stderr, "CPLEX calling problem: getobjval().\n");
       exit( -1 );
    }
 
-   fprintf( gStdErrFile, "   %.2lf |  z\n", obj);
+   fprintf( stderr, "   %.2lf |  z\n", obj);
 }  /* showObjectiveRow */
 /**********************************************************************/
 int showTableauRow( LP lp, int row ) {
    int col;
    double coef;
 
-   fprintf( gStdErrFile, " %3d|", row );
+   fprintf( stderr, " %3d|", row );
    
-   fprintf( gStdErrFile, "   0.00");
+   fprintf( stderr, "   0.00");
    
    if( LP_binvarow( lp, row, tableaux_col )) {
-      fprintf(  gStdErrFile, "CPLEX calling problem: binvarow().\n");
+      fprintf(  stderr, "CPLEX calling problem: binvarow().\n");
       exit( -1 );
    }
 
    for( col = 1; col <= lp->cols; col++ ) {
-      fprintf(  gStdErrFile, "  %6.2lf", tableaux_col[col-1]  );
+      fprintf(  stderr, "  %6.2lf", tableaux_col[col-1]  );
    }  /* for col */
    
    if( LP_binvrow( lp, row, tableaux_row )) {
-      fprintf(  gStdErrFile, "CPLEX calling problem: binvrow().\n");
+      fprintf(  stderr, "CPLEX calling problem: binvrow().\n");
       exit( -1 );
    }
 
    for( col = 1; col <= lp->rows; col++ ) {
-      fprintf(  gStdErrFile, "  %6.2lf", tableaux_row[col-1]  );
+      fprintf(  stderr, "  %6.2lf", tableaux_row[col-1]  );
    }  /* for col */
    
    return( 1 );
@@ -1841,20 +1841,20 @@ int showTableaux(LP lp ) {
    int i, row, col;
    double coef;
 
-   fprintf(  gStdErrFile, "Row |     z ");
+   fprintf(  stderr, "Row |     z ");
    for( i = 0; i < (lp->cols-1); i++ )
-      fprintf(  gStdErrFile, "     x%d", i );
-   fprintf( gStdErrFile, "      y" );
+      fprintf(  stderr, "     x%d", i );
+   fprintf( stderr, "      y" );
    for( i = 0; i < lp->rows; i++ )
-      fprintf(  gStdErrFile, "      s%d", i );
-   fprintf( gStdErrFile, "    b  |   b.v.\n");
+      fprintf(  stderr, "      s%d", i );
+   fprintf( stderr, "    b  |   b.v.\n");
 
-   fprintf(  gStdErrFile, "============");
+   fprintf(  stderr, "============");
    for( i = 0; i < lp->cols; i++ )
-      fprintf(  gStdErrFile, "========", i );
+      fprintf(  stderr, "========", i );
    for( i = 0; i < lp->rows; i++ )
-      fprintf(  gStdErrFile, "========", i );
-   fprintf( gStdErrFile, "=============\n");
+      fprintf(  stderr, "========", i );
+   fprintf( stderr, "=============\n");
 
    showObjectiveRow( lp );
 
@@ -1862,30 +1862,30 @@ int showTableaux(LP lp ) {
 
    /* get list of basic variables */
    if( LP_getgrad( lp, 0, tableaux_bv, dummy_double )) {
-      fprintf(  gStdErrFile, "CPLEX calling problem: getgrad().\n");
+      fprintf(  stderr, "CPLEX calling problem: getgrad().\n");
       exit( -1 );
    }
    
    for( row = 0; row < lp->rows; row++ ) {
 
       showTableauRow( lp, row );
-      fprintf( gStdErrFile, "    %.2lf",tableaux_rhs[row] );
-      fprintf(  gStdErrFile, " |"  );
+      fprintf( stderr, "    %.2lf",tableaux_rhs[row] );
+      fprintf(  stderr, " |"  );
 
       if( tableaux_bv[row] >= 0 ) {
          if( tableaux_bv[row] == gNumVariables )
-            fprintf(  gStdErrFile, "  y" );
+            fprintf(  stderr, "  y" );
          else
-            fprintf( gStdErrFile, "  x%d", tableaux_bv[row] );
+            fprintf( stderr, "  x%d", tableaux_bv[row] );
       }
       else
-         fprintf( gStdErrFile, "  s%d", (tableaux_bv[row] + 1 ) * -1 );    
+         fprintf( stderr, "  s%d", (tableaux_bv[row] + 1 ) * -1 );    
  
-      fprintf(  gStdErrFile, "\n");
+      fprintf(  stderr, "\n");
       
    }  /* for row */;
   
-   fprintf(  gStdErrFile, "\n");
+   fprintf(  stderr, "\n");
 
    return( 1 );
 }  /* showTableaux */
