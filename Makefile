@@ -203,7 +203,7 @@ CLDLIBS  = $(MDP_LIBS) $(LP_SOLVE_LIBS) $(CPLEX_LIBS) $(SYS_LIBS)
 #
 #DEBUGLIBS=./tools/ElectricFence-2.0.5/libefence.a
 
-DEBUG_FLAGS = -g -pedantic
+DEBUG_FLAGS = -g3 -ggdb  -pedantic
 
 # For the dmalloc libraries
 #

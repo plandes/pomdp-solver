@@ -6,3 +6,6 @@
 /mdp/libmdp.a
 /mdp/parser.tab.c
 /pomdp-solve
+/core
+/solution*
+Makefile.depend

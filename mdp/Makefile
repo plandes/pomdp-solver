@@ -58,7 +58,7 @@ SYS_LIBS = -lm
 ######################################################################
 # Compiler - compile time flags
 
-DEBUG_FLAGS = -g
+DEBUG_FLAGS =  -g3 -ggdb
 #PROFILE_FLAGS = -pg
 #OPTIMIZE_FLAGS = -O3
 

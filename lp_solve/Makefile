@@ -28,7 +28,7 @@ CC= gcc
 
 # nice for gcc
 #CFLAGS= -O3 -Wall -pedantic -ansi
-CFLAGS= -g -Wall -pedantic -ansi $(SYS_FLAGS)
+CFLAGS= -g3 -ggdb -Wall -pedantic -ansi $(SYS_FLAGS)
 
 # Option -DCHECK checks for numerical problems during rounding of numbers.
 # It will slow things down a bit.
