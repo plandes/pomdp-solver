@@ -1,0 +1,7 @@
+*.o
+*.a
+/lp_solve/lex.c
+/lp_solve/lp.c
+/mdp/lex.yy.c
+/mdp/libmdp.a
+/mdp/parser.tab.c

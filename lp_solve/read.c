@@ -43,6 +43,8 @@ tmp_store_struct tmp_store;
 short            Ignore_decl;
 hashtable        *Hash_tab;
 
+extern char    *yytext;
+
 #define HASHSIZE  10007 /* prime number is better, MB */
 
 /*

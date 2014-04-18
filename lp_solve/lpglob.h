@@ -25,7 +25,7 @@ extern short      Maximise;
 extern short      *relat;
 extern int        Verbose;
 extern int        yylineno;
-extern int        yyleng;
+//extern int        yyleng;
 extern int        Lin_term_count;
 extern int        Sign;
 extern constraint_name *First_constraint_name;
@@ -43,7 +43,7 @@ extern unsigned char       yytext[];
 #ifdef SYSSOLARIS
 extern char    yytext[];
 #else
-extern char    *yytext;
+//extern char    *yytext;
 #endif
 #endif
 

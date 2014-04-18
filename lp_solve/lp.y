@@ -23,8 +23,9 @@ int isign; 	/* internal_sign variable to make sure nothing goes wrong */
 int make_neg;	/* is true after the relational operator is seen in order */
 		/* to remember if lin_term stands before or after re_op */
 int Within_int_decl = FALSE; /* TRUE when we are within an int declaration */
-%}
 
+//extern char    *yytext;
+%}
 
 
 %start inputfile
@@ -201,4 +202,5 @@ real_of:            lineair_sum
 }
 		;
 %%
+
 #include "lex.c"
