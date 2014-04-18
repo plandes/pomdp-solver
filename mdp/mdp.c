@@ -27,10 +27,14 @@
 
 */
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "mdp.h"
 #include "imm-reward.h"
 #include "sparse-matrix.h"
+
+int readMDPFile( FILE *file );
+
 
 #define MDP_C
 
@@ -105,7 +109,7 @@ int transformBeliefState( double *pi,
    int i, j, z, cur_state, next_state;
 
    if( gProblemType != POMDP_problem_type )
-      return;
+      return 0;
 
    /* zero out all elements since we will acumulate probabilities
       as we loop */
