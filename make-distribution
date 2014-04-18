@@ -1,0 +1,21 @@
+cd /home/arc/proj/
+tar zcvf pomdp-solve-4.0.tgz \
+  pomdp-solve-4.0/make-distribution \
+  pomdp-solve-4.0/COPYRIGHT \
+  pomdp-solve-4.0/PORT-instructions \
+  pomdp-solve-4.0/README \
+  pomdp-solve-4.0/Makefile \
+  pomdp-solve-4.0/*.[chly] \
+  pomdp-solve-4.0/mdp/Makefile \
+  pomdp-solve-4.0/mdp/*.[chly] \
+  pomdp-solve-4.0/lp_solve/Makefile \
+  pomdp-solve-4.0/lp_solve/*.[chly] \
+  pomdp-solve-4.0/docs \
+  pomdp-solve-4.0/examples/*.POMDP \
+  pomdp-solve-4.0/examples/*.alpha
+rm -f pomdp-solve-4.0.uu
+uuencode pomdp-solve-4.0.tgz pomdp-solve-4.0.tgz > pomdp-solve-4.0.uu
+
+# Add these later:
+#  pomdp-solve-4.0/solutions \
+#  pomdp-solve-4.0/testing \

@@ -1,0 +1,18 @@
+POMDP solve version 4.0 written by A. R. Cassandra
+
+This file describes the file format for a policy graph file used in
+the 'pomdp-solve' program.
+
+Each line of the file represents one node of the policy graph and its
+contents are:
+
+  N  A    Z1 Z2 Z3 ...
+
+Here 'N' is a node ID giving the node a unique name.  The 'A' is the
+action number defined for this node; it is an integer refering to the
+the POMDP file actions.  These are followed by a list of node IDs, one
+for each observation.  Thus the list will have a length equal to the
+number of observations in the POMDP.  This list specifies the
+transitions in the policy graph.  The n'th number in the list will be
+the index of the node that follows this one when the observation
+received is 'n'.

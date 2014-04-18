@@ -1,0 +1,296 @@
+Notes on porting the pomdp-solve v4.0 code:
+
+----------------------------------------------------------------------
+REQUIREMENTS
+
+This documentation for installing the code assumes a unix-like
+environment.  Specifically, it assumes that the following programs
+exist (which they do for most unix systems, even if you have never
+heard of them before.)
+
+	uudecode (if you got this via email)
+	gunzip
+	bash
+	tar
+	ar
+	gmake     (regular 'make' will not work without mods to Makefile)
+	gcc       (any ANSI C compiler will probably work though)
+	flex      ('lex' can be substituted with some minor mods)
+	bison     ('yacc' can be substituted with some minor mods)
+
+The commercial CPLEX linear programming software is now optional. If
+you do not have CPLEX, this code will run using the public domain LP
+solver lp_solve.  If CPLEX is available, we assume that it has been
+set up properly and that the machine you run this on is licensed to
+use CPLEX.
+
+Also, you can probbaly get this going with any ANSI C compiler.  In
+this case you might have to muck with the Makefile a bit.  There
+should be enough comments in the Makefile to help you.
+
+----------------------------------------------------------------------
+INSTALLING
+
+There are two ways that you might have received this code:
+	o via email
+	o via web
+
+If you received it via email then this section will help if you have
+never seen or heard of a uuencode file before.  If you received the
+code via the web, you can skip the discussion about uuencoding and
+move the the part of the instructions that begin assuming you have the
+file: pomdp-solve-4.0.tar.gz.
+
+The code will be at the end of the file in uuencoded form at the very
+end of this file.  The uuencoded part looks something like this:
+
+begin 644 pomdp-solve-4.0.tgz
+M'XL(`-A9;S8``^Q;:WOB1I;.U]:OJ,3)8F8`W[KMB2?)+HUQ-QD,+.!T>F?R
+M.$(4H%BH6)5D-_FPOWW?<ZI*$K8[B0-/YDO(D[:DJCIUZES?NJW4<KJJ:Q7=
+MR8-6?_!^V'GS=OS);G]'AX>G+U^*3X009Z?F[Y%]I]\QBH4X??7J].STY.SL
+...
+<More gibberish omitted to save space>
+... 
+end
+
+Cut out everthing from 'begin' to 'end' and put it into its own file
+and call it 'pomdp-solve-4.0.uu'.  Then type the following command:
+
+	% uudecode -p pomdp-solve-4.0.uu > pomdp-solve-4.0.tgz
+
+At this point you should have the decoded file in the file
+pomdp-solve-4.0.tgz.This file is a compressed version of a "tar"
+archive file.  It was compressed with the program 'gzip' after all the
+relevant files were joined into one file with the 'tar' program.
+
+Now, move that file into the directory where you want to put the
+program directory and move into that directory.  e.g., Suppose you
+wanted to put the program in ~/src, then type the commands:
+
+	% mv pomdp-solve-4.0.tgz ~/src
+	% cd ~/src
+	
+Now, type the following command:
+
+	% tar zxvf pomdp-solve-4.0.tgz
+
+This both uncompresses the file and unpacks all the files that it
+contains, e.g., the source files, documentation, examples, etc. 
+
+That should do it as far as installing the code.  You should first
+look at the files in the 'docs' subdirectory and also the files in the
+'examples' subdirectory.  Before compiling, you might need to change
+some things in the Makefile and after that, you can then try typing
+'make dep' and then 'make pomdp-solve' and see what happens.  
+
+----------------------------------------------------------------------
+COMPILING
+
+There are a few points I of concerning compiling the code:
+
+1) CPLEX issues: (ignore if you don't have CPLEX)
+
+  a) For the CPLEX license stuff, it will only link/run if we have the
+     following environment variable set:
+
+	   CPLEXLICENSE=/pro/cplex/license/cplexlicfile
+
+     This works for me, but we have a fixed CPU license.  A floating
+     license might operate differently.  Either way, the Makefile uses
+     the presence of the environment variable CPLEXLICENSE to decide
+     whether to compile CPLEX into the code or not.
+
+     Also, note that recent versions of CPLEX (4.0 and above) seem to
+     have different include file and library names.  Worse yet is that
+     they have changed all their function names.  I think they now
+     prefix all routines with 'CPLX', however there might be a
+     cplex.old.c file that can help you get around this.  I heard all
+     this second hand so I don't know the details.  Moral of the
+     story: beware the CPLEX specific stuff.
+
+  b) You will need to make sure the location of the CPLEX libraries
+     and include files are known to the code as well as the CPLEX
+     version (3.0 or 4.0).  You can do this by defining the
+     environment variable CPLEX_HOME to be the locations of the
+     top-level CPLEX directory where CPLEX was installed. Also you can
+     define the CPLEX_VERSION variable to be either '3' or '4'.
+     Alternatively, you can change the Makefile to have the home
+     directory and version of your CPLEX stuff.
+
+	Here are examples of the environment settings you need if you
+	have CPLEX. Note that the actual values depend upon your
+	particular installation, license and version of CPLEX.
+
+	For csh/tcsh shell:
+
+       setenv CPLEXLICENSE /usr/prop/cplex/cpxlicptr
+       setenv CPLEX_HOME /usr/prop/cplex
+       setenv CPLEX_VERSION 4
+
+     For bash shell:
+
+       export CPLEXLICENSE=/usr/prop/cplex/cpxlicptr
+       export CPLEX_HOME=/usr/prop/cplex
+       export CPLEX_VERSION=4
+
+2) The Makefile attempts to automatically adjust the compilation
+   depending upon the operating system type.  Current types I have
+   tried include Linux and Solaris.  The Makefile detects which is
+   being used through the environment variable OSTYPE, so make sure
+   this variable exists and is set to either 'linux' or 'solaris'. For
+   most systems, these will probably exist without you having to do
+   anything.
+
+3) To build the thing, do this:
+
+     make clean
+	make dep
+	make pomdp-solve
+
+  Makefiles are still mysterious to me, so no guarantees that I
+  actually have this set up to work properly.  It works on the few
+  systems I have tried (Linux, Solaris, Solaris with CPLEX 3.0) , and
+  I tried to make it so it would work other places, but that's all I
+  know.
+
+Also, you can do:
+
+     make auto-test
+
+to build and execute a program which automatically runs the code
+through some simple tests.  This is used to ensure that installation
+went well and for regression testing on subsequent versions.
+
+If you want, you can also do:
+
+	make clean
+
+to clean up all the object files, libraries, etc. or 
+
+     make clean-local
+
+to leave the libraries in tact, but clean up the main pomdp-solve
+code.
+
+You can run it with:
+
+	% pomdp-solve <args>
+
+and
+
+	% pomdp-solve -h 
+
+gives you the complete list of valid arguments.  See the ./docs
+directory for more information.
+
+----------------------------------------------------------------------
+BUGS
+
+1) The lp_solve LP solver is no where need as stable as the CPLEX
+   solver.  Thus, on some problems weird things can happen not to
+   mention that you could get slightly different answers from
+   CPLEX. These will likely be related to the numerical stability of
+   the solver code, though I wouldn't completely rule out a bug on my
+   part.
+
+2) The linear support algorithm only works if you have CPLEX.  I have
+   not yet ported the vertex enumeration to the lp_solve code yet (and
+   may never).
+
+3) All the bugs I haven't discovered yet.
+
+----------------------------------------------------------------------
+COMPILE SCRIPT
+
+Not sure if this will be helpful or not, but here is the transcript of
+what it looks like when I compile the code on linux without CPLEX.
+
+arc on marie % make dep
+make -C ./mdp dep
+make[1]: Entering directory `/u/arc/proj/pomdp-solve-4.0/mdp'
+gcc -E -M  *.[c] > Makefile.depend
+make[1]: Leaving directory `/u/arc/proj/pomdp-solve-4.0/mdp'
+gcc -E -M -I./mdp -I./lp_solve  *.[c] > Makefile.depend
+arc on marie % make
+make -C ./mdp libmdp.a
+make[1]: Entering directory `/u/arc/proj/pomdp-solve-4.0/mdp'
+bison -v -d parser.y
+gcc -g     -c parser.tab.c
+flex scanner.l
+gcc -g     -c lex.yy.c
+gcc -g     -c imm-reward.c
+gcc -g     -c parse_err.c
+gcc -g     -c parse_hash.c
+gcc -g     -c sparse-matrix.c
+gcc -g     -c mdp.c
+ar -crv libmdp.a parser.tab.o lex.yy.o imm-reward.o parse_err.o parse_hash.o sparse-matrix.o mdp.o
+a - parser.tab.o
+a - lex.yy.o
+a - imm-reward.o
+a - parse_err.o
+a - parse_hash.o
+a - sparse-matrix.o
+a - mdp.o
+make[1]: Leaving directory `/u/arc/proj/pomdp-solve-4.0/mdp'
+make -C ./lp_solve liblpk.a
+make[1]: Entering directory `/u/arc/proj/pomdp-solve-4.0/lp_solve_2.2'
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c lpkit.c -o lpkit.o
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c solve.c -o solve.o
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c debug.c -o debug.o
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c read.c -o read.o
+read.c: In function `read_lp_file':
+read.c:572: warning: implicit declaration of function `yyparse'
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c readmps.c -o readmps.o
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c hash.c -o hash.o
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c presolve.c -o presolve.o
+bison -y lp.y
+mv y.tab.c lp.c
+flex lex.l
+mv lex.yy.c lex.c
+gcc -g -Wall -pedantic -ansi -DSYSLINUX   -c lp.c -o lp.o
+/usr/lib/bison.simple: In function `yyparse':
+/usr/lib/bison.simple:327: warning: implicit declaration of function `yyerror'
+/usr/lib/bison.simple:387: warning: implicit declaration of function `yylex'
+lp.y:99: warning: implicit declaration of function `check_decl'
+lex.yy.c: In function `yy_init_buffer':
+In file included from lp.y:204:
+lex.yy.c:1362: warning: implicit declaration of function `fileno'
+lex.yy.c: At top level:
+lex.yy.c:1116: warning: `yyunput' defined but not used
+ar rv liblpk.a lpkit.o solve.o debug.o read.o readmps.o hash.o presolve.o lp.o
+a - lpkit.o
+a - solve.o
+a - debug.o
+a - read.o
+a - readmps.o
+a - hash.o
+a - presolve.o
+a - lp.o
+ranlib liblpk.a
+make[1]: Leaving directory `/u/arc/proj/pomdp-solve-4.0/lp_solve_2.2'
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c global.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c timing.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c random.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c pomdp.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c alpha.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c stats.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c params.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c projection.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c lp-interface.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c region.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c parsimonious.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c neighbor.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c common.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c witness.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c cross-sum.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c enumeration.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c inc-prune.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c two-pass.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c vertex-enum.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c linear-support.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c policy-graph.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c cmd-line.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c signal-handler.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c pomdp-solve.c
+gcc    -DSYSLINUX   -g -pedantic -I./mdp -I./lp_solve  -c main.c
+gcc -o pomdp-solve  -L./mdp -L./lp_solve  global.o timing.o random.o pomdp.o alpha.o stats.o params.o projection.o lp-interface.o region.o parsimonious.o neighbor.o common.o witness.o cross-sum.o enumeration.o inc-prune.o two-pass.o vertex-enum.o linear-support.o policy-graph.o cmd-line.o signal-handler.o pomdp-solve.o main.o   -lmdp -llpk  -lm

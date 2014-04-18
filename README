@@ -1,0 +1,49 @@
+**********************************************************************
+|                          POMDP Solve                               |
+|                                                                    |
+|                          version 4.0                               |
+|                    by Anthony R. Cassandra                         |
+**********************************************************************
+
+Program for performing value iteration on partially observable Markov
+decision processes (POMDPs).
+
+Contents:
+
+README: This file.
+
+COPYRIGHT: The legal stuff.  This version of the code was done
+           independently, but is based upon previous work done at
+           Brown University.
+
+PORT-instructions: This file has the information about porting and
+                   compiling the code.  Probably the file you want to
+                   look at next.
+
+./docs: This directory has some useful documentation such as file
+        formats, command line arguments, etc.  Look at this directory
+        after you successfully get the code to compile.
+
+./mdp: This directory contains the code for a library of low-level
+       POMDP manipulation routines, including parsing files and the
+       internal representation used by the program.  Only look at the
+       stuff in this directory if you want to muck around with the
+       file format and/or the internal representation.
+
+./lp_solve: This directory contains the code for a public domain
+            linear programming solver. It is included it in this
+            distribution because some minor changes were needed to
+            integrate it with the pomdp-solve code.  If the commerical
+            program CPLEX does not exist, this is what is used to
+            solve the linear programs required.
+
+./solutions: This directory contains a repository of solutions that
+             were generated from a stable earlier version for the
+             program.  They can be used for reference or testing
+             purposes and are the results of value iteration for some
+             number of steps on some small problems.
+
+./examples: This directory has some simple example POMDP files.  
+
+./testing: This directory has some test cases used by the auto-test
+           executable. 
