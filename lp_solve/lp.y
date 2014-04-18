@@ -12,6 +12,7 @@
 #include "read.h"
 
 /* globals */
+extern char yytext[];
 char Last_var[NAMELEN];
 char Constraint_name[NAMELEN];
 int Lin_term_count;
@@ -23,8 +24,6 @@ int isign; 	/* internal_sign variable to make sure nothing goes wrong */
 int make_neg;	/* is true after the relational operator is seen in order */
 		/* to remember if lin_term stands before or after re_op */
 int Within_int_decl = FALSE; /* TRUE when we are within an int declaration */
-
-//extern char    *yytext;
 %}
 
 

@@ -42,7 +42,7 @@ CFLAGS= -g -Wall -pedantic -ansi $(SYS_FLAGS)
 
 # Choose your favorite or available version of lex and yacc
 
-#YACC= yacc
+#YACC= yacc -d
 YACC= bison -y
 
 # Added 12/9/98 by arc: I seem to not need the '-l' flag under linux.  
