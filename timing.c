@@ -39,6 +39,8 @@
 
 #include "timing.h"
 
+#define CLK_TCK	CLOCKS_PER_SEC
+
 /**********************************************************************/
 void getSecsDetail( double *user_time, double *system_time ) {
 /* Get total CPU time in seconds breaking it down by user

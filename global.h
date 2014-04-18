@@ -237,7 +237,7 @@ extern char *verbose_mode_str[];
 
 extern int gVerbose[];
 extern char gExecutableName[];
-extern FILE *gStdErrFile;
+extern const FILE *gStdErrFile;
 
 extern double *gTempValue;
 extern double *gTempBelief;

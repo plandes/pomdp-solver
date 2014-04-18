@@ -5,3 +5,4 @@
 /mdp/lex.yy.c
 /mdp/libmdp.a
 /mdp/parser.tab.c
+/pomdp-solve
